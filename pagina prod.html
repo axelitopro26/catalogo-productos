@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catálogo de Productos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    :root {
+      --color-fondo: #fafafa;
+      --color-primario: #2a9d8f;
+      --color-secundario: #264653;
+      --color-error: #e63946;
+      --color-exito: #27ae60;
+      --color-texto: #264653;
+      --color-sombra: rgba(0,0,0,0.1);
+      --espacio: 20px;
+      --radio-boton: 10px;
+      --gap: 30px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--color-fondo);
+      margin: 0;
+      padding: 0;
+      color: var(--color-texto);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: var(--espacio);
+      background: var(--color-primario);
+      color: white;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.9rem;
+      box-shadow: 0 3px 8px var(--color-sombra);
+      user-select: none;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 30px auto 80px;
+      padding: 0 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    /* Grid productos con 3 columnas fijas */
+    .contenedor {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap);
+      padding: 0 var(--gap);
+    }
+
+    .producto {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 3px 10px var(--color-sombra);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+
+    .producto:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px var(--color-sombra);
+    }
+
+    .producto h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.2rem;
+      color: var(--color-secundario);
+      min-height: 48px;
+    }
+
+    .producto p {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--color-primario);
+      margin: 0 0 18px 0;
+    }
+
+    .botones {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 0;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: var(--radio-boton);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      color: white;
+      user-select: none;
+    }
+
+    button.agregar {
+      background-color: var(--color-primario);
+    }
+
+    button.agregar:hover:not(:disabled) {
+      background-color: #238a7b;
+    }
+
+    button.eliminar {
+      background-color: var(--color-error);
+      display: none;
+    }
+
+    button.eliminar:hover {
+      background-color: #b8302f;
+    }
+
+    /* Contenedor lista abajo */
+    #carrito {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 6px 18px var(--color-sombra);
+      font-weight: 600;
+      color: var(--color-secundario);
+      user-select: text;
+      max-width: 600px;
+      margin: 0 auto 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #carrito h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+      text-align: center;
+      border-bottom: 2px solid var(--color-primario);
+      padding-bottom: 10px;
+    }
+
+    .item-carrito {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background-color: #f0f6f6;
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.05);
+    }
+
+    .item-carrito span {
+      flex-grow: 1;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--color-secundario);
+    }
+
+    .item-carrito button {
+      background-color: var(--color-error);
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      color: white;
+      cursor: pointer;
+      border: none;
+      user-select: none;
+    }
+
+    .item-carrito button:hover {
+      background-color: #b8302f;
+    }
+
+    #descargarLista {
+      margin-top: 10px;
+      background-color: var(--color-exito);
+      padding: 15px 0;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      color: white;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    #descargarLista:disabled {
+      background-color: #a5d6a7;
+      cursor: not-allowed;
+    }
+
+    #descargarLista:not(:disabled):hover {
+      background-color: #1b7a33;
+    }
+
+    footer {
+      background: white;
+      text-align: center;
+      padding: 12px 0;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--color-secundario);
+      box-shadow: 0 -3px 8px var(--color-sombra);
+      user-select: none;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      left: 0;
+      z-index: 100;
+    }
+
+    /* Responsive móviles */
+    @media (max-width: 960px) {
+      .contenedor {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .contenedor {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+      }
+      main {
+        margin: 20px 10px 120px;
+        padding: 0 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>Catálogo de Productos</header>
+
+  <main>
+    <!-- Productos arriba -->
+    <section class="contenedor" id="lista-productos" aria-live="polite" aria-label="Lista de productos disponibles">
+      <!-- Productos generados por JS -->
+    </section>
+
+    <!-- Lista/carrito abajo -->
+    <section id="carrito" aria-label="Carrito de compra con productos seleccionados">
+      <h2>Tu carrito</h2>
+      <p id="carrito-vacio">No hay productos seleccionados.</p>
+      <div id="items-carrito"></div>
+      <button id="descargarLista" disabled aria-disabled="true" aria-label="Descargar lista de compra">Descargar lista de compra</button>
+    </section>
+  </main>
+
+  <footer aria-label="Firma del sitio">A.A</footer>
+
+  <script>
+    const productos = [
+      { nombre: 'AirPods 2', precio: 200 },
+      { nombre: 'AirPods 2 Pro (sin cancelación)', precio: 230 },
+      { nombre: 'AirPods 2 Pro con cancelación', precio: 260 },
+      { nombre: 'AirPods 3ra Gen', precio: 250 },
+      { nombre: 'AirPods 4ta Gen (con cancelación)', precio: 400 },
+      { nombre: 'AirPods Max', precio: 320 },
+      { nombre: 'Apple Watch Series 10', precio: 500 },
+      { nombre: 'Apple Watch Ultra', precio: 520 },
+      { nombre: 'Batería MagSafe', precio: 200 },
+      { nombre: 'Beats Studio Pro', precio: 400 },
+      { nombre: 'Bose Studio', precio: 450 },
+      { nombre: 'Galaxy Buds3', precio: 600 },
+      { nombre: 'Galaxy Buds2 Pro', precio: 300 },
+      { nombre: 'Cargador C-C set (cubo y cable)', precio: 120 },
+      { nombre: 'Cargador L-C set (cubo y cable)', precio: 120 },
+      { nombre: 'EarPods con entrada C', precio: 60 },
+      { nombre: 'AirTag localizador', precio: 200 }
+    ];
+
+    const contenedor = document.getElementById('lista-productos');
+    const carritoVacioTexto = document.getElementById('carrito-vacio');
+    const itemsCarritoDiv = document.getElementById('items-carrito');
+    const botonDescargar = document.getElementById('descargarLista');
+
+    let carrito = new Set();
+
+    function actualizarInterfaz() {
+      // Mostrar botones añadir/eliminar en productos
+      productos.forEach((p, i) => {
+        const prodElem = document.getElementById(`producto-${i}`);
+        if (carrito.has(i)) {
+          prodElem.querySelector('.agregar').style.display = 'none';
+          prodElem.querySelector('.eliminar').style.display = 'inline-block';
+        } else {
+          prodElem.querySelector('.agregar').style.display = 'inline-block';
+          prodElem.querySelector('.eliminar').style.display = 'none';
+        }
+      });
+
+      // Actualizar carrito visual
+      if (carrito.size === 0) {
+        carritoVacioTexto.style.display = 'block';
+        itemsCarritoDiv.innerHTML = '';
+        botonDescargar.disabled = true;
+        botonDescargar.setAttribute('aria-disabled', 'true');
+      } else {
+        carritoVacioTexto.style.display = 'none';
+        itemsCarritoDiv.innerHTML = '';
+        carrito.forEach(i => {
+          const p = productos[i];
+          const div = document.createElement('div');
+          div.className = 'item-carrito';
+          div.innerHTML = `
+            <span>${p.nombre} - $${p.precio}</span>
+            <button aria-label="Eliminar ${p.nombre}" data-id="${i}">Eliminar</button>
+          `;
+          const btnEliminar = div.querySelector('button');
+          btnEliminar.addEventListener('click', () => {
+            carrito.delete(i);
+            actualizarInterfaz();
+          });
+          itemsCarritoDiv.appendChild(div);
+        });
+        botonDescargar.disabled = false;
+        botonDescargar.setAttribute('aria-disabled', 'false');
+      }
+    }
+
+    function descargarLista() {
+      if (carrito.size === 0) return;
+      let texto = 'Lista de compra:\n\n';
+      let total = 0;
+      carrito.forEach(i => {
+        const p = productos[i];
+        texto += `- ${p.nombre} : $${p.precio}\n`;
+        total += p.precio;
+      });
+      texto += `\nTotal: $${total}\n\nPor favor, tome una captura de esta lista o manda tu lista descargada y envíela al número +52 1 56 5695 9384 para completar su pedido.`;
+
+      const blob = new Blob([texto], {type: 'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'lista_compra.txt';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 0);
+    }
+
+    // Crear elementos producto y agregar eventos
+    productos.forEach((producto, i) => {
+      const div = document.createElement('article');
+      div.className = 'producto';
+      div.id = `producto-${i}`;
+      div.setAttribute('role', 'region');
+      div.setAttribute('aria-label', `${producto.nombre}, precio $${producto.precio}`);
+      div.innerHTML = `
+        <h3>${producto.nombre}</h3>
+        <p>$${producto.precio}</p>
+        <div class="botones">
+          <button class="agregar" aria-pressed="false">Añadir al carrito</button>
+          <button class="eliminar" aria-pressed="true">Eliminar</button>
+        </div>
+      `;
+
+      const btnAgregar = div.querySelector('.agregar');
+      const btnEliminar = div.querySelector('.eliminar');
+
+      btnAgregar.addEventListener('click', () => {
+        carrito.add(i);
+        actualizarInterfaz();
+      });
+
+      btnEliminar.addEventListener('click', () => {
+        carrito.delete(i);
+        actualizarInterfaz();
+      });
+
+      contenedor.appendChild(div);
+    });
+
+    botonDescargar.addEventListener('click', descargarLista);
+
+    // Inicializar interfaz
+    actualizarInterfaz();
+  </script>
+
+</body>
+</html>
